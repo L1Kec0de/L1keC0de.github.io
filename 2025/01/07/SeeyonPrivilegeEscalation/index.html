@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8">
+  
+  <title>
+    
+    致远OA后渗透
+    
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="me" href="https://mas.uniiem.com/@mizore" />
+  
+<script src="https://cdn.staticfile.org/prism/1.17.1/prism.min.js"></script>
+
+  
+<script src="https://cdn.staticfile.org/prism/1.17.1/plugins/autoloader/prism-autoloader.min.js"></script>
+
+  
+<link rel="stylesheet" href="/css/prism/material-light.css">
+
+  
+<link rel="stylesheet" href="/css/prism/material-dark.css">
+
+  
+<script src="https://cdn.staticfile.org/prism/1.17.1/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
+  
+<link rel="stylesheet" href="https://cdn.staticfile.org/prism/1.17.1/plugins/line-numbers/prism-line-numbers.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Noto+Sans+SC:wght@300&display=swap.css">
+
+  
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<script>
+  function setIsNight(isNight) {
+    localStorage.setItem('isNight', isNight)
+  }
+
+  function getIsNight() {
+    return localStorage.getItem('isNight')
+  }
+
+  function switchTheme() {
+    let isNight = getIsNight()
+    if (isNight === 'false') {
+      document.documentElement.className = 'dark'
+      document.getElementsByClassName('theme-switcher')[0].textContent = '😴'
+      setIsNight('true')
+    } else {
+      document.documentElement.className = 'light'
+      document.getElementsByClassName('theme-switcher')[0].textContent = '😳'
+      setIsNight('false')
+    }
+  }
+
+  let isNight = getIsNight()
+  if (isNight == null) {
+    isNight = 'false'
+    setIsNight('false')
+  }
+  if (isNight === 'false') {
+    document.documentElement.className = 'light'
+  } else {
+    document.documentElement.className = 'dark'
+  }
+</script>
+
+<body>
+  <div class="show-area">
+    <header>
+  <ul class="nav">
+    <li class="nav-child">
+      <a href="/">首页</a>
+    </li>
+    <!-- <li class="nav-child">
+      <a href="/categories">分类</a>
+    </li> -->
+    <li class="nav-child">
+      <a href="/tags">标签</a>
+    </li>
+    <li class="nav-child">
+      <a href="/about">关于</a>
+    </li>
+    <!-- <li class="nav-child">
+      <a href="/collection">收藏</a>
+    </li>
+    <li class="nav-child">
+      <a href="/board">留言</a>
+    </li> -->
+  </ul>
+  <div class="theme-switcher" onclick="switchTheme()">😳</div>
+  <script>
+    if (isNight === 'false') {
+      document.getElementsByClassName('theme-switcher')[0].textContent = '😳'
+    } else {
+      document.getElementsByClassName('theme-switcher')[0].textContent = '😴'
+    }
+  </script>
+</header>
+    <main class="main-body">
+  <div class="toc-container">
+    <div class="toc-toggle">
+      <i id="toc-b-icon" class="iconfont icon-liebiao-01" onclick="toggleShow()"></i>
+    </div>
+    
+  </div>
+  
+  <script>
+    var show = false
+    function toggleShow() {
+      if (show) {
+        document.getElementById('toc-b-icon').className = 'iconfont icon-liebiao-01'
+      } else {
+        document.getElementById('toc-b-icon').className = 'iconfont icon-quxiao-01'
+      }
+      show = !show
+    }
+  </script>
+  
+  <div class="article-header">
+    <h1 class="article-title">致远OA后渗透</h1>
+    <div class="article-details">
+      <div class="article-post-date"><span>Posted at </span> 2025-01-07</div>
+      <div class="article-tags">
+        
+        <a href="/tags/seeyon">#seeyon</a>
+        
+      </div>
+    </div>
+  </div>
+  <div class="article">
+  
+  <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="0edc56e1ea8d0268fcbe5550688608d841651c24b7963997a42e8657ffd2b440">5119dd697428e2ebe6d9660f6d5c25894c8f7a5db5a2a73b755b3f401465e710cd520d2da08378942c290f1fcd59771f86e4037947cd7df124415038f4fbab750e0c0e540a60c2ba4d70747c6c4f87624dc575f4f3f343675ac4b358de5f639e414e95f077733919fb50184b2e84a9c97f0f697ac66ce196f2f95f34ae7759ba320dd31039a41fc7123cddc5ddba5412fb4b885540714daf4aee900f0bbcdd059d582bdbb826d44b4309db5d1326ba387f21b12b7e9b2c0aaa428a70ad86ca5468d58976d67fbf1de2b36c7b5b7c47efd9c6e94f442ae8a308a1826077b078b19f20edbbcf0bbc75b17ac68c1a1bcffb83659133f8d31257c41260cdaff842e1f9e206604054fb08c2a8451fa630afdeccc1cc5956ccbea7b9fdf5ceae89df8f21a8cbf5aa88938e3a140259f02b5d4d10803e7cccd93abd595288e1aa7790cf0aaacf324d9bc3ffe5b8e904eb43d34cdfb9c08ce93d77e796f28d9a9f873396f6a8870bb635402d6212cb991130121833503cd52a1330e013bc3297b9294776a539a4679517b0a03fd36b9851e07790c13767121feace06bfa1cd64e844ebf55ffc94a56cd23216f705faddb42bb45e9ae065f9fb7783c47f09aaf1b9c77e7793e7229084090b7ec42dc1b71b21ea8096afa4417d01dd8be7354f2e5cbd79f72397fed8dee3122c6e2cc654765c9416217437f491e9f7567056db85fb562df74b4a26d5b30d8499e039d1c206d8b1cab76d92740e91780c4df94968689a8569bcadf8ab5b2aebbcc75fd67530b195c895a5ac2801ab60e7dea4ba7ed75cbca4f959aee2550bdb50dc666772d5f7e2b44fc76ebc3386bb17ad9519eca9eba459f9f509754f4e641398f1f980012958bb1203d86157fadf6a7e097f66205a1698</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hey, password is required here.</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
+</div>
+  <o3o key="mizore" api="https://o3o.mizore.site:2333"></o3o>
+  
+<script src="/o3o/o3o.js"></script>
+
+  
+<link rel="stylesheet" href="/css/o3o.css">
+
+</main>
+    <footer>
+  <!-- <div class="footer-info">© 2018-2022 L1keC0de | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> | Theme <a
+      target="_blank" rel="noopener" href="https://github.com/mizoreyo/hexo-theme-insnow">Insnow</a> | <a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">蜀ICP备20005398号</a></div>
+  <div class="footer-info"> -->
+
+
+  <div class="footer-info">© 2018-2025 L1keC0de | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> | Theme <a
+      target="_blank" rel="noopener" href="https://github.com/mizoreyo/hexo-theme-insnow">Insnow</a></div>
+  <div class="footer-info">
+    <!-- <a class="footer-i" target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/mizoreyo/static/images/wechat.PNG"><i class="iconfont icon-wechat"></i></a> -->
+    <a class="footer-i" target="_blank" rel="noopener" href="https://github.com/L1keC0de"><i class="iconfont icon-github-fill"></i></a>
+    <!-- <a class="footer-i" href="/atom.xml"><i class="iconfont icon-rss"></i></a> -->
+    <a class="footer-i" href="mailto:boughar617@gmail.com"><i class="iconfont icon-mail"></i></a>
+  </div>
+</footer>
+
+  </div>
+</body>
+
+
+</html>
